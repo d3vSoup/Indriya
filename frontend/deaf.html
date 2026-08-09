@@ -291,12 +291,26 @@
   .sum-bullets { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
   .sum-bullet  { display:flex; gap:10px; align-items:flex-start; padding:12px 14px; background:#f6f3ec; border:1.5px solid #d5c4ab; border-radius:4px; font-size:13px; line-height:1.55; color:#1c1c18; }
   .sum-bullet-num { width:22px; height:22px; border-radius:50%; background:#ffb800; color:#271900; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-  .sum-footer  { display:flex; gap:8px; padding:14px 20px 18px; border-top:1.5px solid #d5c4ab; }
+  .sum-footer  { display:flex; flex-direction:column; gap:12px; padding:14px 20px 18px; border-top:1.5px solid #d5c4ab; }
+  .sum-footer-btns { display:flex; gap:8px; width:100%; }
   .sum-copy    { flex:1; padding:9px 0; font-size:12px; font-weight:700; border:2px solid #7c5800; border-radius:4px; background:none; color:#7c5800; cursor:pointer; transition:background .15s; display:flex; align-items:center; justify-content:center; gap:6px; }
   .sum-copy:hover { background:#ffdea8; }
   .sum-close-btn { flex:1; padding:9px 0; font-size:12px; font-weight:700; border:2px solid #1c1c18; border-radius:4px; background:#1c1c18; color:#fcf9f2; cursor:pointer; transition:opacity .15s; }
   .sum-close-btn:hover { opacity:0.85; }
   .sum-error { color:#ba1a1a; font-size:13px; text-align:center; padding:16px 0; }
+
+  /* ── Parent Email row (inside sum-footer) ─────────────────────────── */
+  .sum-email-row { display:flex; flex-direction:column; gap:4px; width:100%; }
+  .sum-email-label { font-size:11px; font-weight:700; color:#5c4a2a; letter-spacing:.04em; text-transform:uppercase; }
+  .sum-email-input {
+    width:100%; box-sizing:border-box; padding:8px 10px;
+    font-size:13px; font-family:inherit; border:2px solid #d5c4ab;
+    border-radius:4px; background:#fdf8f0; color:#1c1c18;
+    transition:border-color .15s;
+  }
+  .sum-email-input:focus { outline:none; border-color:#7c5800; }
+  .sum-email-hint { font-size:11px; color:#837560; margin-top:1px; }
+  .sum-email-error { font-size:11px; color:#ba1a1a; margin-top:1px; display:none; }
 
   /* Paste textarea */
   #pasteTextarea {
@@ -335,6 +349,54 @@
     .grid { display: block !important; }
   }
   #printHeader { display: none; }
+
+  /* ── Feature A: Tavily "Ask the Web" Panel ─────────────────────── */
+  .isl-pill { cursor: pointer; }
+  .isl-pill:hover:not(.active):not(.done) { filter: brightness(0.94); }
+  #tavilyPanel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 150;
+    width: 340px;
+    max-width: calc(100vw - 32px);
+    background: #FFFBF2;
+    border: 2px solid #1c1c18;
+    border-radius: 6px;
+    box-shadow: 6px 6px 0 #1c1c18;
+    display: none;
+    flex-direction: column;
+    animation: fadeInItem 0.22s ease both;
+    max-height: 80vh;
+    overflow: hidden;
+  }
+  #tavilyPanel.open { display: flex; }
+  .tav-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 14px 9px;
+    border-bottom: 2px solid #d5c4ab;
+    background: #f1eee7;
+    flex-shrink: 0;
+  }
+  .tav-title  { font-size: 13px; font-weight: 800; color: #1c1c18; display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+  .tav-word   { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+  .tav-close  { background: none; border: none; cursor: pointer; font-size: 16px; color: #837560; padding: 3px 5px; border-radius: 4px; flex-shrink: 0; line-height: 1; }
+  .tav-close:hover { color: #1c1c18; background: #e5e2db; }
+  .tav-body   { padding: 12px 14px; overflow-y: auto; flex: 1; }
+  .tav-result {
+    padding: 10px 11px; border: 1.5px solid #d5c4ab; border-radius: 4px;
+    margin-bottom: 8px; background: #f6f3ec;
+  }
+  .tav-result:last-child { margin-bottom: 0; }
+  .tav-result-title   { font-size: 12px; font-weight: 800; color: #1c1c18; line-height: 1.35; margin-bottom: 3px; }
+  .tav-result-snippet { font-size: 11px; color: #514532; line-height: 1.5; margin-bottom: 5px; }
+  .tav-result-url     { font-size: 10px; color: #476083; text-decoration: underline; word-break: break-all; }
+  .tav-result-url:hover { color: #7c5800; }
+  .tav-loading { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 22px 0; color: #837560; font-size: 12px; }
+  .tav-spinner { width: 18px; height: 18px; border: 2px solid #d5c4ab; border-top-color: #7c5800; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  .tav-empty  { font-size: 12px; color: #837560; text-align: center; padding: 18px 0; }
+  .tav-error  { font-size: 12px; color: #ba1a1a; text-align: center; padding: 18px 0; }
+  .tav-hint   { font-size: 10px; color: #aaa; text-align: center; margin-top: 6px; }
 </style>
 </head>
 <body class="text-on-background min-h-screen flex flex-col">
@@ -497,6 +559,9 @@
               </button>
               <button onclick="exportPDF()" class="text-xs font-bold text-secondary border border-secondary px-2 py-1 rounded-sm hover:bg-secondary-container transition-colors flex items-center gap-1" title="Export full 1-hour dialogue as PDF">
                 <span class="material-symbols-outlined" style="font-size:13px">picture_as_pdf</span>Export PDF
+              </button>
+              <button id="notifyParentsBtn" onclick="notifyParents()" class="text-xs font-bold text-tertiary border border-tertiary px-2 py-1 rounded-sm hover:bg-tertiary-container transition-colors flex items-center gap-1" title="Send lesson summary to parents via n8n webhook">
+                <span class="material-symbols-outlined" style="font-size:13px">mail</span>📬 Notify Parents
               </button>
               <button onclick="clearFeed()" class="text-xs font-bold text-on-surface-variant hover:text-error border border-outline-variant px-2 py-1 rounded-sm hover:border-error transition-colors">Clear</button>
             </div>
@@ -1276,6 +1341,10 @@
 
   window.openSummariseModal = async function() {
     const modal  = document.getElementById('summariseModal');
+    // Pre-populate parent email from localStorage each time modal opens
+    const savedEmail = localStorage.getItem('bharatShaktiParentEmail') || '';
+    const emailInput = document.getElementById('parentEmailInput');
+    if (emailInput) emailInput.value = savedEmail;
     const body   = document.getElementById('sumBody');
     const footer = document.getElementById('sumFooter');
     modal.classList.add('open');
@@ -1334,6 +1403,202 @@
     connectWS();
     restoreDialogueFromStorage(); // Reload up to 1 hour of past dialogue
   });
+
+  /* ───────────────────────────────────────────────────────────────
+  *  Feature A — Tavily "Ask the Web"
+  *  Feature B — n8n Parent Notifications
+  *  ADDITIVE ONLY — nothing above this line is modified.
+  * ────────────────────────────────────────────────────────────── */
+
+  /* ── Helper: HTML-escape Tavily result strings to prevent XSS ── */
+  function _escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ── Feature B: Fetch /config to get n8nWebhookUrl ──────────────────
+   * TAVILY_API_KEY is NOT requested or stored here — it is server-side only.
+   * N8N_WEBHOOK_URL is a URL (not a credential) exposed via /config per the
+   * existing project pattern (same mechanism as supabaseUrl). */
+  let n8nWebhookUrl = '';
+  (async function _fetchConfig() {
+    try {
+      const res = await fetch(BACKEND_HTTP + '/config');
+      if (res.ok) {
+        const cfg = await res.json();
+        n8nWebhookUrl = cfg.n8nWebhookUrl || '';
+      }
+    } catch (e) {
+      console.warn('[Config] Could not load /config:', e.message);
+    }
+  })();
+
+  /* ── Feature A: Gloss pill click → Tavily lookup (event delegation) ──
+   * The pill elements are created dynamically by animateGestures() in
+   * isl-engine.js, so we delegate to their stable parent #glossPills. */
+  glossPills.addEventListener('click', function (e) {
+    const pill = e.target.closest('.isl-pill');
+    if (!pill) return;
+    const word = pill.textContent.trim();
+    if (!word) return;
+    window.tavilyLookup(word);
+  });
+
+  document.getElementById('tavilyCloseBtn').addEventListener('click', function () {
+    document.getElementById('tavilyPanel').classList.remove('open');
+  });
+
+  /* ── Feature A: tavilyLookup(word) ───────────────────────────── */
+  window.tavilyLookup = async function (word) {
+    const panel = document.getElementById('tavilyPanel');
+    const body  = document.getElementById('tavBodyInner');
+    document.getElementById('tavWordLabel').textContent = word;
+    body.innerHTML = '<div class="tav-loading"><div class="tav-spinner"></div><span>Searching the web…</span></div>';
+    panel.classList.add('open');
+
+    try {
+      const res = await fetch(BACKEND_HTTP + '/api/tavily-search', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ query: word })
+      });
+      if (!res.ok) throw new Error('Server error ' + res.status);
+      const data = await res.json();
+
+      if (data.error && !data.results?.length) {
+        body.innerHTML = '<p class="tav-error">⚠ ' + _escHtml(data.error) + '</p><p class="tav-hint">Add TAVILY_API_KEY to your .env</p>';
+        return;
+      }
+      const results = data.results || [];
+      if (!results.length) {
+        body.innerHTML = '<p class="tav-empty">No results found for “' + _escHtml(word) + '”.</p>';
+        return;
+      }
+      body.innerHTML = results.map(r => {
+        const snippet = r.content ? _escHtml(r.content.slice(0, 140)) + '…' : '';
+        return [
+          '<div class="tav-result">',
+          '<div class="tav-result-title">' + _escHtml(r.title || '(No title)') + '</div>',
+          snippet ? '<div class="tav-result-snippet">' + snippet + '</div>' : '',
+          '<a class="tav-result-url" href="' + _escHtml(r.url) + '" target="_blank" rel="noopener noreferrer">'
+            + _escHtml(r.url) + '</a>',
+          '</div>'
+        ].join('');
+      }).join('');
+    } catch (e) {
+      body.innerHTML = '<p class="tav-error">⚠ Search failed. Check your connection.</p>';
+    }
+  };
+
+  /* ── Feature B: notifyParents() ───────────────────────────────
+   * Sends the lesson summary to the configured n8n webhook.
+   * Uses _lastSummaryText if already cached from openSummariseModal().
+   * If not, generates the summary independently (same /api/summarise call,
+   * same transcript logic) WITHOUT modifying openSummariseModal().
+   * toEmail is read from #parentEmailInput (persisted via localStorage). */
+  let _notifyParentsRunning = false;
+
+  // Shared email validation helper (client-side only — backend also validates)
+  function _isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  }
+
+  window.notifyParents = async function () {
+    if (_notifyParentsRunning) return;  // prevent duplicate clicks
+
+    // ── Validate parent email ──────────────────────────────────────────────
+    const emailInput = document.getElementById('parentEmailInput');
+    const emailError = document.getElementById('parentEmailError');
+    const toEmail = emailInput ? emailInput.value.trim() : '';
+
+    if (emailError) { emailError.style.display = 'none'; emailError.textContent = ''; }
+
+    if (!toEmail) {
+      if (emailError) { emailError.textContent = 'Please enter a parent/guardian email address.'; emailError.style.display = 'block'; }
+      if (emailInput) emailInput.focus();
+      // If modal is not open, open it so user sees the field
+      document.getElementById('summariseModal').classList.add('open');
+      return;
+    }
+    if (!_isValidEmail(toEmail)) {
+      if (emailError) { emailError.textContent = 'Please enter a valid email address.'; emailError.style.display = 'block'; }
+      if (emailInput) emailInput.focus();
+      document.getElementById('summariseModal').classList.add('open');
+      return;
+    }
+
+    // Persist the valid email to localStorage for future use
+    localStorage.setItem('bharatShaktiParentEmail', toEmail);
+
+    const btn = document.getElementById('notifyParentsBtn');
+    _notifyParentsRunning = true;
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px">hourglass_top</span>Sending…';
+    btn.disabled = true;
+
+    let success = false;
+    try {
+      // Use cached summary if available; otherwise generate fresh (no modal opened)
+      let summaryText = _lastSummaryText;
+
+      if (!summaryText) {
+        const entries = loadDialogueEntries();
+        if (!entries.length) {
+          showToast('⚠ No session content yet. Speak first, then notify.');
+          return;  // finally will reset state
+        }
+        const transcript = [...entries].reverse()
+          .map(e => (e.lang === 'hi' ? '[HI] ' : '[EN] ') + e.text).join('\n');
+
+        const sumRes = await fetch(BACKEND_HTTP + '/api/summarise', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ transcript })
+        });
+        if (!sumRes.ok) throw new Error('Summary API error ' + sumRes.status);
+        const sumData = await sumRes.json();
+        const bullets = sumData.bullets ||
+          (sumData.summary ? sumData.summary.split('\n').filter(Boolean) : []);
+        if (!bullets.length) throw new Error('Empty summary response');
+        summaryText = bullets.join('\n');
+      }
+
+      // POST to backend proxy → n8n webhook (avoids CORS, keeps webhook URL server-side)
+      const wRes = await fetch(BACKEND_HTTP + '/api/notify-parents', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          toEmail:     toEmail,
+          summary:     summaryText,
+          timestamp:   new Date().toISOString(),
+          subjectMode: (typeof currentSubjectMode !== 'undefined' ? currentSubjectMode : 'general')
+        })
+      });
+      if (!wRes.ok) {
+        const errData = await wRes.json().catch(() => ({}));
+        throw new Error(errData.error || 'Webhook responded with HTTP ' + wRes.status);
+      }
+      success = true;
+
+    } catch (e) {
+      showToast('⚠ Notification failed: ' + (e.message || 'Network error'));
+    } finally {
+      if (success) {
+        showToast('✅ Parents notified!');
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px">check_circle</span>✅ Notified!';
+        setTimeout(() => {
+          btn.innerHTML = origHTML;
+          btn.disabled = false;
+          _notifyParentsRunning = false;
+        }, 3000);
+      } else {
+        btn.innerHTML = origHTML;
+        btn.disabled = false;
+        _notifyParentsRunning = false;
+      }
+    }
+  };
 </script>
 <script src="gradient-bg.js"></script>
 
@@ -1350,12 +1615,46 @@
     </div>
     <div class="sum-body" id="sumBody"></div>
     <div class="sum-footer" id="sumFooter" style="display:none">
-      <button class="sum-copy" id="sumCopyBtn" onclick="copySummary()">
-        <span class="material-symbols-outlined" style="font-size:14px">content_copy</span>Copy to clipboard
-      </button>
-      <button class="sum-close-btn" onclick="closeSummariseModal()">Close</button>
+      <!-- Parent/Guardian Email — persisted in localStorage -->
+      <div class="sum-email-row" id="sumEmailRow">
+        <label class="sum-email-label" for="parentEmailInput">Parent / Guardian Email</label>
+        <input
+          type="email"
+          id="parentEmailInput"
+          class="sum-email-input"
+          placeholder="parent@example.com"
+          autocomplete="email"
+          aria-required="true"
+          aria-describedby="parentEmailHint parentEmailError"
+        />
+        <span id="parentEmailHint" class="sum-email-hint">Lesson summary will be sent here. Saved for next time.</span>
+        <span id="parentEmailError" class="sum-email-error" role="alert"></span>
+      </div>
+      <div class="sum-footer-btns">
+        <button class="sum-copy" id="sumCopyBtn" onclick="copySummary()">
+          <span class="material-symbols-outlined" style="font-size:14px">content_copy</span>Copy to clipboard
+        </button>
+        <button class="sum-close-btn" onclick="closeSummariseModal()">Close</button>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Feature A: Tavily "Ask the Web" Panel — NEW, does not modify existing modals -->
+<div id="tavilyPanel" role="complementary" aria-label="Web search results panel">
+  <div class="tav-header">
+    <div class="tav-title">
+      <span aria-hidden="true">🔎</span>
+      <span class="tav-word" id="tavWordLabel">Look up</span>
+    </div>
+    <button id="tavilyCloseBtn" class="tav-close" aria-label="Close web search panel" title="Close">✕</button>
+  </div>
+  <div class="tav-body">
+    <div id="tavBodyInner">
+      <p class="tav-empty">Click any ISL gloss word above to search the web.</p>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
