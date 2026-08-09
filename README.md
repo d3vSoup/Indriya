@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD3YIhH3GKawDIW8h2JzTeX6tFkqKFHQySiWF7uNKZxe7trmLqfyT-pZJF9fwB3uMn95dW18_LORTSYaojc2am6kWbNQr3Gu3nRAIuqaM9rcAIudkExbVyHlWxSArAdRH8CuxVFiNcz_A-KQh0nZh-RE2j_mknqpl-qbFMtU_8WBoODVroVqw0-kYSnazkvwVDG_CLz6Ap1U1hf3G7xwg1cmC1BUa5k0LMG-0LGcCG7AEoNnBcgujnFA" alt="Bharat Shakti Logo" width="100"/>
+  <img src="https://cnwsrgqlpvxxnwsndhsm.supabase.co/storage/v1/object/public/isl-gestures/branding/indriya_logo.png" alt="Indriya Logo" width="120"/>
   
-  # 🇮🇳 Bharat Shakti
+  # 🇮🇳 Indriya
   
   [![Typing SVG](https://readme-typing-svg.demolab.com?font=Atkinson+Hyperlegible+Next&weight=700&size=24&pause=1000&color=7C5800&center=true&vCenter=true&width=600&lines=Empowering+Deaf+Classrooms;Empowering+Blind+Classrooms;Inclusivity+is+not+a+toggle)](https://git.io/typing-svg)
   
@@ -24,9 +24,9 @@ In a typical Indian classroom, educational infrastructure struggles to support s
 - **Deaf students** miss out on vocal lectures because sign language interpreters aren't present. Existing tools focus on ASL (American Sign Language), ignoring the 18 million Deaf people in India who use **ISL (Indian Sign Language)**.
 - **Blind students** can hear the lecture, but can't see board notes, slides, or type digital responses without expensive physical Braille displays. 
 
-## 🚀 The Solution: Bharat Shakti
+## 🚀 The Solution: Indriya
 
-Bharat Shakti bridges these gaps through two powerful, browser-based environments that require **zero specialized hardware**.
+Indriya bridges these gaps through two powerful, browser-based environments that require **zero specialized hardware**.
 
 <p align="center">
   <img src="docs/assets/homepage.png" alt="Homepage Screenshot" width="800" style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"/>
@@ -72,7 +72,7 @@ A **native digital Braille environment** that allows blind students to take note
 
 ## 🧠 AI / ML Strategy
 
-Bharat Shakti leverages AI as an **invisible infrastructure** to make the experience seamless.
+Indriya leverages AI as an **invisible infrastructure** to make the experience seamless.
 Highlights include:
 - **Board OCR:** Point a phone camera at a blackboard, and Gemini Vision extracts handwriting to broadcast to both Deaf and Blind modes.
 - **Two-Way Signing:** Uses **MediaPipe + XGBoost** to let deaf students sign back via webcam.
@@ -86,7 +86,7 @@ Highlights include:
 
 - **Frontend:** Vanilla HTML/JS, TailwindCSS, Web Speech API, `SpeechSynthesis` API.
 - **Backend:** Python, FastAPI, WebSockets, Uvicorn.
-- **Assets/CDN:** Supabase Storage (hosting 250+ ISL animation GIFs).
+- **Assets/CDN:** Supabase Storage (hosting 250+ ISL animation GIFs + Indriya logo).
 - **Deployments:** Vercel (Frontend), Render (Backend).
 
 ---
@@ -128,5 +128,5 @@ We maintain detailed, living documents about our design philosophy, technical ch
 <br>
 
 <div align="center">
-  <i>Built with ❤️ for inclusive education in India.</i>
+  <i>Built with ❤️ for inclusive education in India — by the Indriya team.</i>
 </div>

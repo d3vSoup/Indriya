@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bharat Shakti — Supabase Asset Upload Script
+Indriya — Supabase Asset Upload Script
 Uploads all ISL gesture images and Hindi sign images to Supabase Storage.
 
 Usage:

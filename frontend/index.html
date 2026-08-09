@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta name="description" content="Bharat Shakti — Inclusive Classroom AI. An adaptive platform for deaf and blind students powered by real-time ISL translation and Braille input."/>
-<title>Bharat Shakti | Inclusive Education AI</title>
+<meta name="description" content="Indriya — Inclusive Classroom AI. An adaptive platform for deaf and blind students powered by real-time ISL translation and Braille input."/>
+<title>Indriya | Inclusive Education AI</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
   tailwind.config = {
     darkMode: "class",
@@ -71,6 +72,80 @@
   header { background: rgba(252,249,242,0.88) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   footer { background: rgba(229,226,219,0.85) !important; backdrop-filter: blur(8px); }
   section, .bg-surface, .bg-surface-container, .bg-surface-container-low { background: rgba(255, 255, 255, 0.7) !important; backdrop-filter: blur(4px); }
+
+  /* ── Rotating Quotes ─────────────────────────────── */
+  #quotesCarousel {
+    position: relative;
+    overflow: hidden;
+    height: 110px;
+  }
+  .quote-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    pointer-events: none;
+  }
+  .quote-slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .quote-slide.exit {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(15px, 2vw, 19px);
+    color: #271900;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 600px;
+    padding: 0 12px;
+  }
+  .quote-author {
+    font-family: 'Atkinson Hyperlegible Next', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7c5800;
+  }
+  /* Dot indicators */
+  .quote-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #d5c4ab; border: none; cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .quote-dot.active { background: #7c5800; transform: scale(1.4); }
+
+  /* ── Mission pillars glow ─────────────────────── */
+  .mission-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .mission-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 10px 0px 0px #1c1c18;
+  }
+
+  /* ── Logo pulse ring ──────────────────────────── */
+  @keyframes logoRing {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,184,0,0.35); }
+    50% { box-shadow: 0 0 0 10px rgba(255,184,0,0); }
+  }
+  .logo-ring { animation: logoRing 2.5s ease infinite; border-radius: 9999px; }
+
+  /* ── Impact number pulse ───────────────────────── */
+  @keyframes numPop { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+  .num-pop { animation: numPop 0.4s ease; }
 </style>
 </head>
 <body class="text-on-background min-h-screen flex flex-col">
@@ -79,10 +154,10 @@
 <header class="w-full border-b-2 border-on-surface bg-surface sticky top-0 z-50">
   <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-7xl mx-auto">
     <div class="flex items-center gap-3">
-      <img alt="Bharat Shakti Logo — AegisEdu Shield" class="h-10 w-10 object-contain rounded-md" 
-           src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD3YIhH3GKawDIW8h2JzTeX6tFkqKFHQySiWF7uNKZxe7trmLqfyT-pZJF9fwB3uMn95dW18_LORTSYaojc2am6kWbNQr3Gu3nRAIuqaM9rcAIudkExbVyHlWxSArAdRH8CuxVFiNcz_A-KQh0nZh-RE2j_mknqpl-qbFMtU_8WBoODVroVqw0-kYSnazkvwVDG_CLz6Ap1U1hf3G7xwg1cmC1BUa5k0LMG-0LGcCG7AEoNnBcgujnFA"/>
+      <img alt="Indriya Logo" class="h-10 w-10 object-contain rounded-full logo-ring"
+           src="https://cnwsrgqlpvxxnwsndhsm.supabase.co/storage/v1/object/public/isl-gestures/branding/indriya_logo.png"/>
       <div>
-        <div class="font-extrabold text-xl text-primary tracking-tight leading-none">Bharat Shakti</div>
+        <div class="font-extrabold text-xl text-primary tracking-tight leading-none">Indriya</div>
         <div class="text-xs text-on-surface-variant font-medium tracking-widest uppercase">Inclusive Education AI</div>
       </div>
     </div>
@@ -107,15 +182,68 @@
       <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-primary-fixed rounded-full opacity-40 torn-edge"></div>
       <div class="relative z-10 mb-6 inline-flex items-center gap-2 bg-surface-container border-2 border-on-surface px-4 py-2 rounded-full paper-shadow-sm">
         <span class="material-symbols-outlined text-primary text-lg">school</span>
-        <span class="font-label-lg text-label-lg text-primary tracking-widest uppercase text-sm">PS4 · Bharat Shakti · SIH</span>
+        <span class="font-label-lg text-label-lg text-primary tracking-widest uppercase text-sm">PS4 · Indriya · SIH 2024</span>
       </div>
       <h1 class="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface max-w-4xl relative z-10 mb-6">
-        Inclusivity is not a setting you toggle—<br/>
-        <span class="bg-primary-container text-on-primary-container px-3 pb-1 inline-block mt-2 torn-edge">it is an adaptive environment.</span>
+        Every student deserves to learn —<br/>
+        <span class="bg-primary-container text-on-primary-container px-3 pb-1 inline-block mt-2 torn-edge">without barriers, without limits.</span>
       </h1>
-      <p class="font-body-lg text-body-md text-on-surface-variant max-w-2xl mb-10 relative z-10">
-        Experience education through the <strong>'Silent Handshake'</strong> philosophy. Our platform adapts to your sensory needs autonomously—ensuring every student has a tailored, barrier-free learning journey.
+      <p class="font-body-lg text-body-md text-on-surface-variant max-w-2xl mb-8 relative z-10">
+        <strong>Indriya</strong> bridges the gap for <strong>18 million+ deaf</strong> and <strong>blind students</strong> across India — delivering real-time Indian Sign Language translation and digital Braille, right inside the classroom. No special hardware needed.
       </p>
+
+      <!-- Educational Quotes Section -->
+      <div class="relative z-10 w-full max-w-2xl mb-8 bg-surface-container border-2 border-on-surface rounded-sm paper-shadow-sm p-5">
+        <div class="flex items-center gap-2 mb-3 justify-center">
+          <span class="material-symbols-outlined text-primary text-lg">format_quote</span>
+          <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Words of Wisdom</span>
+        </div>
+        <div id="quotesCarousel" aria-live="polite" aria-label="Educational quotes carousel">
+          <div class="quote-slide active" role="group" aria-label="Quote 1 of 8">
+            <p class="quote-text">"Education is the most powerful weapon which you can use to change the world."</p>
+            <span class="quote-author">— Nelson Mandela</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 2 of 8">
+            <p class="quote-text">"The function of education is to teach one to think intensively and to think critically."</p>
+            <span class="quote-author">— Dr. Martin Luther King Jr.</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 3 of 8">
+            <p class="quote-text">"Inclusion is not a matter of political correctness. It is the key to growth."</p>
+            <span class="quote-author">— Jesse Jackson</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 4 of 8">
+            <p class="quote-text">"There is no greater disability in society than the inability to see a person as more than their disability."</p>
+            <span class="quote-author">— Robert M. Hensel</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 5 of 8">
+            <p class="quote-text">"शिक्षा सबसे शक्तिशाली हथियार है जिसे आप दुनिया को बदलने के लिए उपयोग कर सकते हैं।"</p>
+            <span class="quote-author">— नेल्सन मंडेला</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 6 of 8">
+            <p class="quote-text">"Alone we can do so little; together we can do so much."</p>
+            <span class="quote-author">— Helen Keller</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 7 of 8">
+            <p class="quote-text">"The highest result of education is tolerance."</p>
+            <span class="quote-author">— Helen Keller</span>
+          </div>
+          <div class="quote-slide" role="group" aria-label="Quote 8 of 8">
+            <p class="quote-text">"Every child deserves a champion — an adult who will never give up on them."</p>
+            <span class="quote-author">— Rita Pierson</span>
+          </div>
+        </div>
+        <!-- Dot indicators -->
+        <div class="flex justify-center gap-2 mt-3" id="quoteDots" aria-label="Quote navigation">
+          <button class="quote-dot active" aria-label="Go to quote 1" onclick="goToQuote(0)"></button>
+          <button class="quote-dot" aria-label="Go to quote 2" onclick="goToQuote(1)"></button>
+          <button class="quote-dot" aria-label="Go to quote 3" onclick="goToQuote(2)"></button>
+          <button class="quote-dot" aria-label="Go to quote 4" onclick="goToQuote(3)"></button>
+          <button class="quote-dot" aria-label="Go to quote 5" onclick="goToQuote(4)"></button>
+          <button class="quote-dot" aria-label="Go to quote 6" onclick="goToQuote(5)"></button>
+          <button class="quote-dot" aria-label="Go to quote 7" onclick="goToQuote(6)"></button>
+          <button class="quote-dot" aria-label="Go to quote 8" onclick="goToQuote(7)"></button>
+        </div>
+      </div>
 
       <!-- Two CTA cards -->
       <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl mb-8">
@@ -173,8 +301,48 @@
     </div>
   </section>
 
-  <!-- Silent Handshake Section -->
+  <!-- What Indriya Does — Judge-Facing Mission Section -->
   <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg" id="about">
+    <div class="text-center mb-12">
+      <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4">What Indriya Does</h2>
+      <p class="text-body-md text-on-surface-variant max-w-2xl mx-auto">
+        India has over <strong>18 million deaf</strong> people and millions more with visual impairments. Most cannot access quality classroom education. Indriya changes that — today, with zero hardware cost.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <!-- Pillar 1 -->
+      <div class="mission-card bg-surface border-2 border-on-surface paper-shadow p-7 flex flex-col gap-4 rounded-sm">
+        <div class="w-14 h-14 bg-primary-container border-2 border-on-surface rounded-full flex items-center justify-center torn-edge">
+          <span class="material-symbols-outlined text-on-primary-fixed text-3xl">sign_language</span>
+        </div>
+        <h3 class="font-bold text-xl text-on-surface">Real-Time Sign Language</h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+          When a teacher speaks, Indriya instantly translates every word into beautiful Indian Sign Language animations on the deaf student's screen — in proper ISL grammar. No interpreter needed.
+        </p>
+      </div>
+      <!-- Pillar 2 -->
+      <div class="mission-card bg-[#FFFBF2] border-2 border-on-surface paper-shadow p-7 flex flex-col gap-4 rounded-sm torn-edge-bottom">
+        <div class="w-14 h-14 bg-tertiary-container border-2 border-on-surface rounded-full flex items-center justify-center torn-edge">
+          <span class="material-symbols-outlined text-on-tertiary-container text-3xl">braille</span>
+        </div>
+        <h3 class="font-bold text-xl text-on-surface">Virtual Braille Keyboard</h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+          Blind students type notes in Braille on any standard keyboard — no ₹45,000 Braille device needed. Every keypress gives instant audio feedback, and teacher broadcasts are read aloud automatically.
+        </p>
+      </div>
+      <!-- Pillar 3 -->
+      <div class="mission-card bg-surface-container-low border-2 border-on-surface paper-shadow p-7 flex flex-col gap-4 rounded-sm">
+        <div class="w-14 h-14 bg-secondary-container border-2 border-on-surface rounded-full flex items-center justify-center torn-edge">
+          <span class="material-symbols-outlined text-on-secondary-container text-3xl">auto_detect_voice</span>
+        </div>
+        <h3 class="font-bold text-xl text-on-surface">Silent Handshake</h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+          Before a lesson starts, Indriya silently detects the student's accessibility needs and auto-configures itself. No pop-ups, no questions — just seamless, instant adaptation.
+        </p>
+      </div>
+    </div>
+
+    <!-- How It Helps — Story Flow -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
       <div class="order-2 md:order-1 bg-surface-container p-8 border-2 border-on-surface torn-edge-bottom paper-shadow">
         <h2 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
@@ -202,10 +370,10 @@
       <div class="order-1 md:order-2 flex justify-center relative">
         <div class="w-full aspect-square max-w-md relative bg-surface-container-high rounded-full border-2 border-on-surface overflow-hidden flex items-center justify-center p-8">
           <div class="absolute inset-0 border-[16px] border-primary-container rounded-full opacity-20 animate-pulse"></div>
-          <img class="w-full h-full object-cover rounded-full mix-blend-multiply opacity-80"
-               alt="Abstract paper collage showing a handshake between human and technology"
-               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEDiBFQuvFGMx2aBHrGzZhP-BXsoz2korKebG5sJAS8lYFA_8kI9n8bJ3s--lwvDFFee4KvVnMzCTmk3fmJBnrfnHTpW8zi-gUa6KSWTbZ-zivxvcvQ7zvpe4v2NnezwMKiOs9YTSyTw1YWkjbb3QV-5APK0Ou8Vu9XDvgn70C5BQUR9I-rde-3RIpuDq_RWLv_wKLyEkbTUiUX4_uJzjUz9WMpnIF7qpAVv0fH-larNpwy1SiwBlVWg"/>
-          <div class="absolute bottom-6 left-0 right-0 text-center font-bold text-primary text-sm tracking-widest uppercase">Bharat Shakti</div>
+          <img class="w-48 h-48 object-contain rounded-full"
+               alt="Indriya Logo"
+               src="https://cnwsrgqlpvxxnwsndhsm.supabase.co/storage/v1/object/public/isl-gestures/branding/indriya_logo.png"/>
+          <div class="absolute bottom-6 left-0 right-0 text-center font-bold text-primary text-sm tracking-widest uppercase">Indriya</div>
         </div>
       </div>
     </div>
@@ -292,7 +460,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="md:col-span-1 border-r-0 md:border-r-2 border-on-surface pr-0 md:pr-8 border-b-2 md:border-b-0 pb-8 md:pb-0">
           <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Technical Excellence</h2>
-          <p class="font-label-lg text-label-lg text-primary uppercase tracking-widest mb-4">Bharat Shakti Hackathon</p>
+          <p class="font-label-lg text-label-lg text-primary uppercase tracking-widest mb-4">Indriya Hackathon</p>
           <p class="font-body-md text-body-md text-on-surface-variant">
             Robust, offline-capable architecture. Zero hardware drivers — everything runs in the browser.
           </p>
@@ -309,7 +477,7 @@
             <span class="material-symbols-outlined text-tertiary text-3xl">visibility</span>
             <div>
               <h4 class="font-label-lg text-label-lg text-on-surface mb-1">Qwen3-VL Board OCR</h4>
-              <p class="font-body-md text-body-md text-sm text-on-surface-variant">Open-source SOTA vision reads handwritten boards in Hindi & English — no OCR misses.</p>
+              <p class="font-body-md text-body-md text-sm text-on-surface-variant">Open-source SOTA vision reads handwritten boards in Hindi &amp; English — no OCR misses.</p>
             </div>
           </div>
           <div class="bg-surface p-4 border-2 border-on-surface flex items-start gap-4 rounded-sm">
@@ -337,15 +505,15 @@
 <footer class="w-full mt-lg border-t-2 border-on-surface bg-surface-container-highest">
   <div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-md max-w-7xl mx-auto gap-6 md:gap-0">
     <div class="flex items-center gap-2">
-      <img alt="Bharat Shakti Logo" class="h-8 w-8 object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD3YIhH3GKawDIW8h2JzTeX6tFkqKFHQySiWF7uNKZxe7trmLqfyT-pZJF9fwB3uMn95dW18_LORTSYaojc2am6kWbNQr3Gu3nRAIuqaM9rcAIudkExbVyHlWxSArAdRH8CuxVFiNcz_A-KQh0nZh-RE2j_mknqpl-qbFMtU_8WBoODVroVqw0-kYSnazkvwVDG_CLz6Ap1U1hf3G7xwg1cmC1BUa5k0LMG-0LGcCG7AEoNnBcgujnFA"/>
-      <span class="font-headline-md text-xl font-bold text-primary">Bharat Shakti</span>
+      <img alt="Indriya Logo" class="h-8 w-8 object-contain rounded-full" src="https://cnwsrgqlpvxxnwsndhsm.supabase.co/storage/v1/object/public/isl-gestures/branding/indriya_logo.png"/>
+      <span class="font-headline-md text-xl font-bold text-primary">Indriya</span>
     </div>
     <nav aria-label="Footer Navigation" class="flex flex-wrap justify-center gap-6">
       <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline transition-all focus-ring rounded-sm" href="https://github.com/AI4Bharat/INCLUDE" target="_blank" rel="noopener">Repositories</a>
       <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline transition-all focus-ring rounded-sm" href="bharat_shakti_master_document.md">Project Document</a>
     </nav>
     <div class="font-body-md text-body-md text-on-surface text-center md:text-right text-sm">
-      © 2024 Bharat Shakti — PS4 Inclusive Education
+      © 2024 Indriya — PS4 Inclusive Education
     </div>
   </div>
 </footer>
@@ -386,18 +554,15 @@
     }
   });
 
-  /* ── Auto-announce for blind users (no gesture needed for speechSynthesis) ── */
-  // Fires on page load — blind users hear this before touching anything.
-  // speechSynthesis.speak() works without any user gesture, unlike AudioContext.
+  /* ── Auto-announce for blind users ─────────────────── */
   window.addEventListener('load', () => {
     setTimeout(() => {
       speak(
-        'Welcome to Bharat Shakti — Inclusive Classroom Assistant. ' +
+        'Welcome to Indriya — Inclusive Classroom Assistant. ' +
         'If you are a blind student, press the space bar key now to enter Blind Mode with full audio and Braille support. ' +
         'If you are a deaf student, click anywhere or tap Deaf Mode.'
       );
     }, 600);
-    // Gentle repeat after 8s in case they missed the first announcement
     setTimeout(() => {
       if (document.visibilityState === 'visible') {
         speak('Press the space bar key for Blind Mode, or click anywhere for Deaf Mode.');
@@ -451,12 +616,44 @@
     }, { threshold: 0.4 });
     obs.observe(statsRow);
   } else if (statsRow) {
-    // No IntersectionObserver — just set final values immediately
     document.getElementById('stat1').textContent = '18M+ deaf';
     document.getElementById('stat2').textContent = '150+ signs';
     document.getElementById('stat3').textContent = '<50ms';
   }
 </script>
+
+<!-- ── Rotating Quotes Script ────────────────────────── -->
+<script>
+  const slides = document.querySelectorAll('.quote-slide');
+  const dots   = document.querySelectorAll('.quote-dot');
+  let current  = 0;
+  let quoteTimer;
+
+  function goToQuote(idx) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current === idx ? 0 : current].classList.remove('exit'), 700);
+    dots[current].classList.remove('active');
+    current = idx;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    resetQuoteTimer();
+  }
+  window.goToQuote = goToQuote;
+
+  function nextQuote() {
+    const next = (current + 1) % slides.length;
+    goToQuote(next);
+  }
+
+  function resetQuoteTimer() {
+    clearInterval(quoteTimer);
+    quoteTimer = setInterval(nextQuote, 4500);
+  }
+
+  resetQuoteTimer();
+</script>
+
 <script src="gradient-bg.js"></script>
 </body>
 </html>

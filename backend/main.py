@@ -43,7 +43,7 @@ if GROQ_API_KEY:
     except ImportError:
         print("groq package not installed. Run: pip install groq")
 
-app = FastAPI(title="Bharat Shakti - Inclusive Classroom Backend")
+app = FastAPI(title="Indriya - Inclusive Classroom Backend")
 
 
 # Enable CORS for frontend integration
@@ -368,7 +368,7 @@ async def notify_parents(request: dict):
         timestamp = request.get("timestamp", "")
         subject_mode = request.get("subjectMode", "general").capitalize()
         date_part = timestamp[:10] if timestamp else ""  # "YYYY-MM-DD"
-        subject = f"Bharat Shakti – {subject_mode} Lesson Summary"
+        subject = f"Indriya – {subject_mode} Lesson Summary"
         if date_part:
             subject += f" ({date_part})"
 

@@ -120,7 +120,7 @@ window.notifyParents = async function(summaryText) {
 
 **n8n Workflow to build (no code, just drag-and-drop nodes):**
 1. **Webhook Trigger node** — receives `{ summary, timestamp }`.
-2. **Set node** — formats the email body: "Bharat Shakti Lesson Summary — {{timestamp}}: {{summary}}".
+2. **Set node** — formats the email body: "Indriya Lesson Summary — {{timestamp}}: {{summary}}".
 3. **Send Email node** — sends to the parent email list.
 
 **Get n8n:** Either sign up at https://n8n.io (cloud trial) or `npx n8n` to run locally.

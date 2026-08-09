@@ -1,5 +1,5 @@
 /**
- * isl-engine.js — Bharat Shakti ISL NLP Pipeline
+ * isl-engine.js — Indriya ISL NLP Pipeline
  *
  * Pipeline (inspired by satyam9090 + AI4Bharat INCLUDE approach):
  *   Raw text → Normalise → Detect lang → Transliterate Hindi

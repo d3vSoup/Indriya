@@ -1,12 +1,12 @@
-# Bharat Shakti — Tavily & n8n Feature Integration Guide
+# Indriya — Tavily & n8n Feature Integration Guide
 > **Documentation for Developers & Maintainers**  
-> *Last Updated: August 2026 | Bharat Shakti Inclusive Classroom Platform*
+> *Last Updated: August 2026 | Indriya Inclusive Classroom Platform*
 
 ---
 
 ## 📖 Executive Summary & Quick Handoff
 
-Welcome to the **Bharat Shakti** integration guide for **Tavily Web Search** and **n8n Workflow Automation**. 
+Welcome to the **Indriya** integration guide for **Tavily Web Search** and **n8n Workflow Automation**. 
 
 If you are a developer joining this project or continuing work after the initial build: **You do NOT need to rebuild the Tavily or n8n features from scratch.** Both features are fully implemented, verified, and running in production/local dev environments.
 
@@ -37,13 +37,13 @@ If you are a developer joining this project or continuing work after the initial
 
 ## Part 1 — Project Context
 
-**Bharat Shakti** is an adaptive, inclusive classroom platform designed for deaf and visually impaired students in India. It operates on the **"Silent Handshake"** philosophy — using real-time Indian Sign Language (ISL) gesture translation, Perkins 6-dot Braille input, Web Audio spatial earcons, and Groq/Gemini AI models to provide barrier-free education.
+**Indriya** is an adaptive, inclusive classroom platform designed for deaf and visually impaired students in India. It operates on the **"Silent Handshake"** philosophy — using real-time Indian Sign Language (ISL) gesture translation, Perkins 6-dot Braille input, Web Audio spatial earcons, and Groq/Gemini AI models to provide barrier-free education.
 
 ### Why Tavily and n8n are Integrated
 
 ```
                        ┌─────────────────────────────────────────┐
-                       │        BHARAT SHAKTI PLATFORM           │
+                       │        INDRIYA PLATFORM           │
                        └────────────────────┬────────────────────┘
                                             │
                     ┌───────────────────────┴───────────────────────┐
@@ -73,7 +73,7 @@ If you are a developer joining this project or continuing work after the initial
 ## Part 2 — Tavily Implementation
 
 ### Overview
-Tavily provides real-time web search and content extraction tuned for AI applications. In Bharat Shakti, Tavily requests are strictly **proxied through the FastAPI backend** to protect the API key.
+Tavily provides real-time web search and content extraction tuned for AI applications. In Indriya, Tavily requests are strictly **proxied through the FastAPI backend** to protect the API key.
 
 ### Technical Specification
 * **Environment Variable**: `TAVILY_API_KEY` (stored in `.env`, loaded into `main.py`).
@@ -137,7 +137,7 @@ async def tavily_search(request: dict):
 ## Part 3 — n8n Implementation
 
 ### Overview
-n8n is an open-source workflow automation platform. Bharat Shakti uses an n8n cloud/self-hosted production webhook to trigger multi-step notifications (e.g. Gmail/SMTP email delivery).
+n8n is an open-source workflow automation platform. Indriya uses an n8n cloud/self-hosted production webhook to trigger multi-step notifications (e.g. Gmail/SMTP email delivery).
 
 ### Architecture: Why a Backend Proxy is Mandatory
 Direct browser-to-n8n `fetch()` calls fail in production due to **CORS (Cross-Origin Resource Sharing)** rules enforced by n8n Cloud and local browsers. Proxying requests through `POST /api/notify-parents` solves this cleanly:
@@ -187,7 +187,7 @@ async def notify_parents(request: dict):
         timestamp = request.get("timestamp", "")
         subject_mode = request.get("subjectMode", "general").capitalize()
         date_part = timestamp[:10] if timestamp else ""
-        subject = f"Bharat Shakti – {subject_mode} Lesson Summary"
+        subject = f"Indriya – {subject_mode} Lesson Summary"
         if date_part:
             subject += f" ({date_part})"
 
@@ -209,7 +209,7 @@ async def notify_parents(request: dict):
 ## Part 4 — Dynamic Parent/Guardian Email
 
 ### Problem Definition
-Bharat Shakti is deployed across schools with multiple deaf/blind students. Hardcoding a single server-wide recipient (such as `NOTIFY_EMAIL=parent@gmail.com`) is unacceptable for production because **every student has a different parent/guardian**.
+Indriya is deployed across schools with multiple deaf/blind students. Hardcoding a single server-wide recipient (such as `NOTIFY_EMAIL=parent@gmail.com`) is unacceptable for production because **every student has a different parent/guardian**.
 
 ### Client-Side Implementation & LocalStorage Persistence
 1. **Input Interface**: A dedicated email input field (`#parentEmailInput`) with `<label for="parentEmailInput">Parent / Guardian Email</label>` is embedded inside `#sumFooter` of the Summarise Lesson Modal (`#summariseModal`).
@@ -225,7 +225,7 @@ Bharat Shakti is deployed across schools with multiple deaf/blind students. Hard
 | `summary` | Groq Llama 3.3 (`/api/summarise`) | 5-bullet lesson summary text | `• Point 1\n• Point 2...` |
 | `timestamp` | JavaScript `ISOString` | ISO 8601 UTC timestamp of notification | `2026-08-09T04:45:00.000Z` |
 | `subjectMode` | Page state (`currentSubjectMode`) | Subject track (`general`, `science`, `maths`, `geography`) | `science` |
-| `subject` | Backend auto-generator | Formatted email subject line | `Bharat Shakti – Science Lesson Summary (2026-08-09)` |
+| `subject` | Backend auto-generator | Formatted email subject line | `Indriya – Science Lesson Summary (2026-08-09)` |
 
 ---
 
@@ -251,7 +251,7 @@ The n8n workflow consists of three chained nodes:
   ```json
   {
     "toEmail": "parent.student123@example.com",
-    "subject": "Bharat Shakti – Science Lesson Summary (2026-08-09)",
+    "subject": "Indriya – Science Lesson Summary (2026-08-09)",
     "summary": "1. Gravity is a force...\n2. Objects fall...",
     "timestamp": "2026-08-09T04:45:00.000Z",
     "subjectMode": "science"
@@ -264,7 +264,7 @@ The n8n workflow consists of three chained nodes:
 * **Subject Field Expression**: `{{ $json.body.subject }}`
 * **Message / Body Expression**:
   ```text
-  Bharat Shakti Inclusive Classroom Lesson Summary
+  Indriya Inclusive Classroom Lesson Summary
 
   Date: {{ $json.body.timestamp.slice(0, 10) }}
   Subject Mode: {{ $json.body.subjectMode }}
@@ -273,7 +273,7 @@ The n8n workflow consists of three chained nodes:
   {{ $json.body.summary }}
 
   --
-  Sent automatically via Bharat Shakti Silent Handshake Platform
+  Sent automatically via Indriya Silent Handshake Platform
   ```
 
 #### 3. Log / Output Node
@@ -444,4 +444,4 @@ The following enhancements are optional ideas for future iterations:
 * **State Keys**: `localStorage.getItem('bharatShaktiParentEmail')`.
 * **Current Status**: **Fully Functional & Verified**.
 
-*Bharat Shakti Platform | Built for Accessibility*
+*Indriya Platform | Built for Accessibility*

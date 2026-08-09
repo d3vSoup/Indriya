@@ -1,5 +1,5 @@
 /**
- * isl-dict.js — Bharat Shakti ISL Gesture Dictionary
+ * isl-dict.js — Indriya ISL Gesture Dictionary
  *
  * Image sources (priority order):
  *  1. Animated GIFs  — satyam9090/Automatic-Indian-Sign-Language-Translator (86 real ISL GIFs)

@@ -1,4 +1,4 @@
-# Bharat Shakti — MASTER PLAN TO WIN
+# Indriya — MASTER PLAN TO WIN
 ### The Complete 1–2 Day Sprint Guide
 
 > **For Antigravity to execute.** Every feature is enumerated, every file is named, every line of code is explained. No ambiguity. No skipped steps. Read top to bottom and execute in order.
@@ -583,7 +583,7 @@ Change it to:
 
 **File:** `frontend/index.html`
 
-Find the hero section (around line 108 — the badge that says "PS4 · Bharat Shakti · SIH"). Add a stats row BELOW the two CTA cards and ABOVE the accessibility auto-detection notice.
+Find the hero section (around line 108 — the badge that says "PS4 · Indriya · SIH"). Add a stats row BELOW the two CTA cards and ABOVE the accessibility auto-detection notice.
 
 Find this in index.html:
 ```html
@@ -1374,7 +1374,7 @@ SUPABASE_SERVICE_KEY=...
 
 # 🤖 COMPREHENSIVE AI & FEATURE MAPPING
 
-Here is the complete enumeration of every feature in the Bharat Shakti platform, detailing where and how Artificial Intelligence (and other APIs) have been integrated.
+Here is the complete enumeration of every feature in the Indriya platform, detailing where and how Artificial Intelligence (and other APIs) have been integrated.
 
 ## 1. Deaf Mode (ISL Translation & Classroom UI)
 | Feature | Description | AI / Tool Used | Implementation Detail |
@@ -1404,4 +1404,4 @@ Here is the complete enumeration of every feature in the Bharat Shakti platform,
 
 *This is the complete, executable plan. Start from Phase 0. Do not skip steps. The order matters because the frontend API calls depend on the backend endpoints existing first.*
 
-*Last updated: August 2026 | Bharat Shakti — Built to Win*
+*Last updated: August 2026 | Indriya — Built to Win*

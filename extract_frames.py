@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 extract_frames.py — Extract the best middle frame from each ISL word .MOV video
-and save as a .jpg for use in the Bharat Shakti ISL visualiser.
+and save as a .jpg for use in the Indriya ISL visualiser.
 
 Source: ProcessedData_vivit (Kaggle kaushikyh/indian-sign-language-words-with-landmarks)
 Output: frontend/isl_gestures/words_vivit/<word>.jpg

@@ -1,5 +1,5 @@
 /**
- * Bharat Shakti — Animated Ribbon-Field Gradient Background
+ * Indriya — Animated Ribbon-Field Gradient Background
  * Stays permanently fixed (like a wallpaper) while all page
  * content scrolls on top of it.
  *
@@ -13,7 +13,7 @@
 (function () {
   'use strict';
 
-  /* ── Colour stops (Bharat Shakti amber palette) ────────────────────────
+  /* ── Colour stops (Indriya amber palette) ────────────────────────
      White → Cream → Bright amber → Deep amber → Dark brown
   ─────────────────────────────────────────────────────────────────────── */
   const STOPS = [
