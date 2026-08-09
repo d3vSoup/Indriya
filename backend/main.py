@@ -14,7 +14,7 @@ import google.generativeai as genai
 # Load .env from repo root
 try:
     from dotenv import load_dotenv
-    load_dotenv(Path(__file__).parent.parent / ".env")
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 except ImportError:
     pass  # dotenv optional; fall back to system env vars
 
@@ -23,6 +23,12 @@ SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")  # backend-only, never exposed
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GROQ_API_KEY   = os.environ.get("GROQ_API_KEY", "")
+# ── Feature A: Tavily (server-side only — NEVER exposed to frontend via /config or any response) ──
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "")
+# ── Feature B: n8n webhook URL (safe to expose via /config — it is a URL, not a credential) ──
+N8N_WEBHOOK_URL = os.environ.get("N8N_WEBHOOK_URL", "")
+# ── Feature B: recipient email (backend-only — NEVER exposed to frontend) ──
+NOTIFY_EMAIL = os.environ.get("NOTIFY_EMAIL", "")
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -53,10 +59,12 @@ app.add_middleware(
 # ── Public config endpoint (safe — anon key only, no service key) ─────────────
 @app.get("/config")
 def get_config():
-    """Expose public Supabase credentials to frontend. Service key is NEVER included."""
+    """Expose public Supabase credentials and n8n webhook URL to frontend.
+    Service key and Tavily API key are NEVER included."""
     return JSONResponse({
         "supabaseUrl":     SUPABASE_URL,
         "supabaseAnonKey": SUPABASE_ANON_KEY,
+        "n8nWebhookUrl":   N8N_WEBHOOK_URL,   # Feature B: safe URL, not a secret
     })
 
 
@@ -281,6 +289,108 @@ async def board_ocr(file: UploadFile = File(...)):
     # Broadcast to all connected students via WebSocket
     await manager.broadcast({"type": "board_note", "text": extracted_text})
     return {"status": "success", "extracted_text": extracted_text, "source": source_used}
+
+
+# ── Feature A: Tavily "Ask the Web" ─────────────────────────────────────────
+# SECURITY: TAVILY_API_KEY is read from env and used server-side only.
+# It is NEVER returned to the frontend in any response.
+@app.post("/api/tavily-search")
+async def tavily_search(request: dict):
+    """
+    Search the live web via Tavily API. The API key remains strictly server-side.
+    POST body: { "query": "photosynthesis" }
+    Returns:   { "results": [{ "title": "...", "url": "...", "content": "..." }] }
+    Returns empty results list for blank queries or missing API key — never errors loudly.
+    """
+    query = request.get("query", "").strip()
+    if not query:
+        return {"results": []}
+    if not TAVILY_API_KEY:
+        print("Tavily: TAVILY_API_KEY not set. Add it to .env to enable live web search.")
+        return {"results": [], "error": "Web search not configured on server. Add TAVILY_API_KEY to .env."}
+    try:
+        import httpx
+        async with httpx.AsyncClient() as client:
+            res = await client.post(
+                "https://api.tavily.com/search",
+                json={"query": query, "max_results": 3, "search_depth": "basic"},
+                headers={"Authorization": f"Bearer {TAVILY_API_KEY}"},
+                timeout=8.0
+            )
+            res.raise_for_status()
+        data = res.json()
+        return {"results": data.get("results", [])}
+    except Exception as e:
+        print(f"Tavily search error: {e}")
+        return {"results": [], "error": "Search unavailable. Please try again."}
+
+
+
+# ── Feature B: n8n Parent Notifications proxy ────────────────────────────────
+# Proxies the lesson summary to the n8n production webhook server-side.
+# This avoids CORS issues that occur when the browser POSTs directly to n8n.
+# N8N_WEBHOOK_URL is read from env; it is never hardcoded.
+# toEmail is provided per-request by the frontend (stored in browser localStorage).
+@app.post("/api/notify-parents")
+async def notify_parents(request: dict):
+    """
+    Forward a lesson summary to the configured n8n webhook.
+    POST body: { "toEmail": "...", "summary": "...", "timestamp": "...", "subjectMode": "..." }
+    toEmail is supplied per-request by the frontend (from browser localStorage).
+    The backend validates toEmail, generates the subject, and forwards the payload
+    so n8n expressions {{ $json.body.toEmail }} and {{ $json.body.subject }} resolve correctly.
+    Returns: { "status": "ok" } on success, or an error dict on failure.
+    """
+    if not N8N_WEBHOOK_URL:
+        return JSONResponse(
+            {"error": "N8N_WEBHOOK_URL not configured on server. Add it to .env."},
+            status_code=503
+        )
+
+    # Validate toEmail from request body
+    import re
+    to_email = request.get("toEmail", "").strip()
+    if not to_email:
+        return JSONResponse(
+            {"error": "toEmail is required. Please enter a parent/guardian email address."},
+            status_code=400
+        )
+    # Basic RFC-style email format check (rejects obviously malformed addresses)
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", to_email):
+        return JSONResponse(
+            {"error": "toEmail is not a valid email address."},
+            status_code=400
+        )
+
+    try:
+        import httpx
+        # Build the subject from available data — no hardcoded personal info
+        timestamp = request.get("timestamp", "")
+        subject_mode = request.get("subjectMode", "general").capitalize()
+        date_part = timestamp[:10] if timestamp else ""  # "YYYY-MM-DD"
+        subject = f"Bharat Shakti – {subject_mode} Lesson Summary"
+        if date_part:
+            subject += f" ({date_part})"
+
+        # Build outgoing payload: forward all frontend fields + inject subject
+        # toEmail comes from the request body (frontend localStorage) — not from server env
+        outgoing = dict(request)          # preserves summary, timestamp, subjectMode, toEmail
+        outgoing["subject"] = subject     # required by n8n {{ $json.body.subject }}
+        # Ensure toEmail is the validated, stripped value
+        outgoing["toEmail"] = to_email    # required by n8n {{ $json.body.toEmail }}
+
+        async with httpx.AsyncClient() as client:
+            res = await client.post(
+                N8N_WEBHOOK_URL,
+                json=outgoing,
+                headers={"Content-Type": "application/json"},
+                timeout=10.0
+            )
+            res.raise_for_status()
+        return {"status": "ok"}
+    except Exception as e:
+        print(f"n8n notify-parents error: {e}")
+        return JSONResponse({"error": str(e)}, status_code=502)
 
 
 @app.websocket("/ws/student/{mode}")
