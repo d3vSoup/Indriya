@@ -8,7 +8,8 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Quintessential&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
   tailwind.config = {
     darkMode: "class",
@@ -72,6 +73,38 @@
   header { background: rgba(252,249,242,0.88) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   footer { background: rgba(229,226,219,0.85) !important; backdrop-filter: blur(8px); }
   section, .bg-surface, .bg-surface-container, .bg-surface-container-low { background: rgba(255, 255, 255, 0.7) !important; backdrop-filter: blur(4px); }
+
+  /* ── Quintessential headings ───────────────────────── */
+  .font-quint { font-family: 'Quintessential', cursive; }
+  .font-playfair { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* ── Scroll-fade reveal system ─────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* staggered children */
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay: 0.05s; }
+  .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay: 0.15s; }
+  .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay: 0.25s; }
+  .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay: 0.35s; }
+
+  /* Scroll-down chevron bounce */
+  @keyframes bounceCaret {
+    0%,100% { transform: translateY(0); opacity: 0.7; }
+    50%      { transform: translateY(8px); opacity: 1; }
+  }
+  .scroll-caret { animation: bounceCaret 1.8s ease-in-out infinite; }
 
   /* ── Rotating Quotes ─────────────────────────────── */
   #quotesCarousel {
@@ -182,10 +215,10 @@
       <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-primary-fixed rounded-full opacity-40 torn-edge"></div>
       <div class="relative z-10 mb-6 inline-flex items-center gap-2 bg-surface-container border-2 border-on-surface px-4 py-2 rounded-full paper-shadow-sm">
         <span class="material-symbols-outlined text-primary text-lg">school</span>
-        <span class="font-label-lg text-label-lg text-primary tracking-widest uppercase text-sm">PS4 · Indriya · SIH 2024</span>
+        <span class="font-label-lg text-label-lg text-primary tracking-widest uppercase text-sm">PS4 · Indriya · SIH 2026</span>
       </div>
-      <h1 class="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface max-w-4xl relative z-10 mb-6">
-        Every student deserves to learn <br/>
+      <h1 class="font-playfair text-headline-lg-mobile md:text-headline-xl text-on-surface max-w-4xl relative z-10 mb-6" style="font-size:clamp(32px,5vw,52px);line-height:1.15;font-weight:700;letter-spacing:-0.01em">
+        Every student deserves to learn<br/>
         <span class="bg-primary-container text-on-primary-container px-3 pb-1 inline-block mt-2 torn-edge">without barriers, without limits.</span>
       </h1>
       <p class="font-body-lg text-body-md text-on-surface-variant max-w-2xl mb-8 relative z-10">
@@ -196,7 +229,7 @@
       <div class="relative z-10 w-full max-w-2xl mb-8 bg-surface-container border-2 border-on-surface rounded-sm paper-shadow-sm p-5">
         <div class="flex items-center gap-2 mb-3 justify-center">
           <span class="material-symbols-outlined text-primary text-lg">format_quote</span>
-          <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Words of Wisdom</span>
+          <span class="font-quint text-sm text-on-surface-variant tracking-widest" style="font-size:13px">Words of Wisdom</span>
         </div>
         <div id="quotesCarousel" aria-live="polite" aria-label="Educational quotes carousel">
           <div class="quote-slide active" role="group" aria-label="Quote 1 of 8">
@@ -301,15 +334,23 @@
     </div>
   </section>
 
+  <!-- Scroll-down caret -->
+  <div class="flex justify-center -mt-8 mb-4 relative z-10" aria-hidden="true">
+    <a href="#about" class="scroll-caret flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+      <span class="text-xs font-bold uppercase tracking-widest" style="font-family:'Quintessential',cursive;font-size:11px">Explore</span>
+      <span class="material-symbols-outlined text-2xl">keyboard_arrow_down</span>
+    </a>
+  </div>
+
   <!-- What Indriya Does — Judge-Facing Mission Section -->
   <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg" id="about">
-    <div class="text-center mb-12">
-      <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4">What Indriya Does</h2>
+    <div class="text-center mb-12 reveal">
+      <h2 class="font-quint text-on-surface mb-4" style="font-size:clamp(28px,4vw,40px);letter-spacing:0.01em">What Indriya Does</h2>
       <p class="text-body-md text-on-surface-variant max-w-2xl mx-auto">
-        India has over <strong>18 million deaf</strong> people and millions more with visual impairments. Most cannot access quality classroom education. Indriya changes that — today, with zero hardware cost.
+        India has over <strong>18 million deaf</strong> people and millions more with visual impairments. Most cannot access quality classroom education. Indriya changes that, today, with zero hardware cost.
       </p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 reveal-stagger">
       <!-- Pillar 1 -->
       <div class="mission-card bg-surface border-2 border-on-surface paper-shadow p-7 flex flex-col gap-4 rounded-sm">
         <div class="w-14 h-14 bg-primary-container border-2 border-on-surface rounded-full flex items-center justify-center torn-edge">
@@ -345,12 +386,12 @@
     <!-- How It Helps — Story Flow -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
       <div class="order-2 md:order-1 bg-surface-container p-8 border-2 border-on-surface torn-edge-bottom paper-shadow">
-        <h2 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+        <h2 class="font-quint text-on-surface mb-4 flex items-center gap-2" style="font-size:clamp(22px,3vw,30px)">
           <span class="material-symbols-outlined text-tertiary text-3xl">handshake</span>
-          The 'Silent Handshake'
+          The Silent Handshake
         </h2>
         <p class="font-body-md text-body-md text-on-surface-variant mb-6">
-          Before a lesson begins, the platform performs a <strong>sensory handshake</strong>. CSS media queries and behavioral cues auto-configure the environment — no intrusive questionnaires required.
+          Before a lesson begins, the platform performs a <strong>sensory handshake</strong>. CSS media queries and behavioral cues auto-configure the environment. No intrusive questionnaires required.
         </p>
         <ul class="space-y-4 font-body-md text-body-md text-on-surface">
           <li class="flex items-start gap-3">
@@ -381,8 +422,8 @@
 
   <!-- Dual Learning Paths -->
   <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg bg-surface-container-low border-y-2 border-on-surface my-lg">
-    <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-center mb-12 text-on-surface">Dual Learning Paths</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <h2 class="font-quint text-center mb-12 text-on-surface reveal" style="font-size:clamp(26px,4vw,38px)">Dual Learning Paths</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-stagger">
 
       <!-- Blind Mode Card -->
       <div class="bg-surface border-2 border-on-surface paper-shadow p-6 md:p-8 flex flex-col focus-ring group hover:bg-surface-container transition-colors rounded-sm" tabindex="0">
@@ -428,7 +469,7 @@
   <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg mb-lg">
     <div class="bg-surface border-2 border-on-surface paper-shadow p-8 rounded-sm">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+        <h2 class="font-playfair text-on-surface flex items-center gap-2" style="font-size:clamp(20px,2.5vw,28px);font-weight:700">
           <span class="material-symbols-outlined text-primary text-3xl">psychology</span>
           Try It Live: English to ISL SOV
         </h2>
@@ -459,8 +500,8 @@
       <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#dcdad3] opacity-80 transform -rotate-2 rounded-sm"></div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="md:col-span-1 border-r-0 md:border-r-2 border-on-surface pr-0 md:pr-8 border-b-2 md:border-b-0 pb-8 md:pb-0">
-          <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Technical Excellence</h2>
-          <p class="font-label-lg text-label-lg text-primary uppercase tracking-widest mb-4">Indriya Hackathon</p>
+          <h2 class="font-quint text-on-surface mb-2" style="font-size:clamp(22px,3vw,30px)">Technical Excellence</h2>
+          <p class="font-playfair text-primary mb-4" style="font-size:15px;font-style:italic">Indriya Hackathon</p>
           <p class="font-body-md text-body-md text-on-surface-variant">
             Robust, offline-capable architecture. Zero hardware drivers — everything runs in the browser.
           </p>
@@ -513,7 +554,7 @@
       <a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline transition-all focus-ring rounded-sm" href="bharat_shakti_master_document.md">Project Document</a>
     </nav>
     <div class="font-body-md text-body-md text-on-surface text-center md:text-right text-sm">
-      © 2024 Indriya — PS4 Inclusive Education
+      © 2026 Indriya · PS4 Inclusive Education
     </div>
   </div>
 </footer>
@@ -655,5 +696,25 @@
 </script>
 
 <script src="gradient-bg.js"></script>
+<!-- ── Scroll-Reveal IntersectionObserver ────────────── -->
+<script>
+  (function() {
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: just make everything visible immediately
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => el.classList.add('visible'));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target); // fire once
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => observer.observe(el));
+  })();
+</script>
 </body>
 </html>
