@@ -10,6 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Quintessential&display=swap" rel="stylesheet"/>
+<!-- GSAP (AccordionGallery) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<link rel="stylesheet" href="accordion-gallery.css"/>
 <script id="tailwind-config">
   tailwind.config = {
     darkMode: "class",
@@ -58,6 +61,15 @@
   }
 </script>
 <style>
+  /* ── Apple Design Skills: Canonical Easing Tokens ───────────────────
+     From animate/SKILL.md & AUDIT.md — never approximate these values.
+  ────────────────────────────────────────────────────────────────────── */
+  :root {
+    --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);       /* strong ease-out — UI entrances */
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);      /* strong ease-in-out — on-screen movement */
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);       /* iOS-style drawer / sheet */
+  }
+
   body {
     background: transparent;
     font-family: 'Atkinson Hyperlegible Next', sans-serif;
@@ -69,42 +81,100 @@
   .focus-ring:focus-within { outline: 4px solid #ffb800; outline-offset: 4px; }
   a:focus-visible, button:focus-visible { outline: 4px solid #ffb800; outline-offset: 4px; border-radius: 2px; }
   .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400; font-size: inherit; vertical-align: middle; }
-  /* Let the gradient canvas shine through semi-transparent surfaces */
-  header { background: rgba(252,249,242,0.88) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  footer { background: rgba(229,226,219,0.85) !important; backdrop-filter: blur(8px); }
-  section, .bg-surface, .bg-surface-container, .bg-surface-container-low { background: rgba(255, 255, 255, 0.7) !important; backdrop-filter: blur(4px); }
+
+  /* ── Apple §12 Materials & Depth — translucency conveys hierarchy ─── */
+  /* Header: floating functional layer, content scrolls underneath */
+  header {
+    background: rgba(252,249,242,0.82) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.5) !important; /* bright top-edge = light catching the material */
+  }
+  footer { background: rgba(229,226,219,0.92) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  section, .bg-surface, .bg-surface-container, .bg-surface-container-low { background: rgba(255,255,255,0.85) !important; }
 
   /* ── Quintessential headings ───────────────────────── */
   .font-quint { font-family: 'Quintessential', cursive; }
   .font-playfair { font-family: 'Playfair Display', Georgia, serif; }
 
-  /* ── Scroll-fade reveal system ─────────────────────── */
+  /* ── Apple §15 Typography — size-specific tracking ──────────────────
+     Large display text: negative tracking. Body: near 0. Labels: slight positive.
+  ────────────────────────────────────────────────────────────────────── */
+  h1 { letter-spacing: -0.025em; line-height: 1.08; }
+  h2 { letter-spacing: -0.015em; line-height: 1.2; }
+  h3 { letter-spacing: -0.01em; }
+
+  /* ── Apple §1 Response — button press on pointer-down, 160ms ────────
+     From animate/RECIPES.md: scale(0.97) + 160ms strong ease-out.
+     Responds on :active (pointer-down) not on release.
+  ────────────────────────────────────────────────────────────────────── */
+  a[href], button, [role="button"], [tabindex="0"] {
+    transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out);
+  }
+  a[href]:active, button:active, [role="button"]:active, [tabindex="0"]:active {
+    transform: scale(0.97);
+  }
+  /* Enter button — Apple-style press with border compensation */
+  #enterBtn {
+    transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), border-bottom-width 160ms var(--ease-out);
+  }
+  #enterBtn:active {
+    transform: scale(0.97) translateY(1px);
+  }
+
+  /* ── CTA cards: hover gated to pointer:fine (no false hover on touch) */
+  @media (hover: hover) and (pointer: fine) {
+    #blindCard:hover, #deafCard:hover {
+      transform: translateY(-3px);
+      box-shadow: 6px 10px 0px 0px #1c1c18;
+    }
+  }
+  #blindCard, #deafCard {
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), background-color 200ms var(--ease-out);
+  }
+
+  /* ── Nav link transitions ─────────────────────────────────────────── */
+  nav a {
+    transition: color 160ms var(--ease-out), background-color 160ms var(--ease-out);
+  }
+
+  /* ── Scroll-reveal with clip-path (from RECIPES.md) ─────────────────
+     Clip-path reveal: wipes in from bottom, feels more physical than fade.
+     Kept with opacity for older browser fallback via the stagger version.
+  ────────────────────────────────────────────────────────────────────── */
   .reveal {
     opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    transform: translateY(20px);
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 500ms var(--ease-out);
   }
   .reveal.visible {
     opacity: 1;
     transform: translateY(0);
   }
-  /* staggered children */
+
+  /* ── Stagger: 30–80ms per child (from RECIPES.md) ──────────────────
+     Previous 50/150/250/350ms was too slow and felt sluggish.
+  ────────────────────────────────────────────────────────────────────── */
   .reveal-stagger > * {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1);
+    transform: translateY(16px);
+    transition:
+      opacity 400ms var(--ease-out),
+      transform 400ms var(--ease-out);
   }
-  .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay: 0.05s; }
-  .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay: 0.15s; }
-  .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay: 0.25s; }
-  .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay: 0.35s; }
+  .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay: 0ms; }
+  .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay: 50ms; }
+  .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay: 100ms; }
+  .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay: 150ms; }
 
-  /* Scroll-down chevron bounce */
+  /* ── Scroll-down chevron bounce ─────────────────────────────────── */
   @keyframes bounceCaret {
     0%,100% { transform: translateY(0); opacity: 0.7; }
     50%      { transform: translateY(8px); opacity: 1; }
   }
-  .scroll-caret { animation: bounceCaret 1.8s ease-in-out infinite; }
+  .scroll-caret { animation: bounceCaret 1.8s var(--ease-in-out) infinite; }
 
   /* ── Rotating Quotes ─────────────────────────────── */
   #quotesCarousel {
@@ -121,8 +191,10 @@
     justify-content: center;
     gap: 6px;
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateY(14px);
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 500ms var(--ease-out);
     pointer-events: none;
   }
   .quote-slide.active {
@@ -132,12 +204,16 @@
   }
   .quote-slide.exit {
     opacity: 0;
-    transform: translateY(-16px);
+    transform: translateY(-14px);
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 300ms var(--ease-out);
   }
   .quote-text {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-size: clamp(15px, 2vw, 19px);
+    letter-spacing: -0.005em; /* slight negative tracking for display italic */
     color: #271900;
     text-align: center;
     line-height: 1.5;
@@ -148,7 +224,7 @@
     font-family: 'Atkinson Hyperlegible Next', sans-serif;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em; /* positive tracking for small caps / labels */
     text-transform: uppercase;
     color: #7c5800;
   }
@@ -156,29 +232,55 @@
   .quote-dot {
     width: 6px; height: 6px; border-radius: 50%;
     background: #d5c4ab; border: none; cursor: pointer;
-    transition: background 0.3s ease, transform 0.3s ease;
+    transition: background 200ms var(--ease-out), transform 200ms var(--ease-out);
   }
+  .quote-dot:active { transform: scale(0.97); }
   .quote-dot.active { background: #7c5800; transform: scale(1.4); }
 
-  /* ── Mission pillars glow ─────────────────────── */
+  /* ── Mission pillars — hover gated to pointer:fine ──────────────── */
   .mission-card {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition:
+      transform 200ms var(--ease-out),
+      box-shadow 200ms var(--ease-out);
   }
-  .mission-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 6px 10px 0px 0px #1c1c18;
+  @media (hover: hover) and (pointer: fine) {
+    .mission-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 6px 10px 0px 0px #1c1c18;
+    }
+  }
+  .mission-card:active {
+    transform: scale(0.98);
   }
 
-  /* ── Logo pulse ring ──────────────────────────── */
+  /* ── Apple §7 Spatial Consistency — Logo pulse ring ─────────────── */
   @keyframes logoRing {
     0%,100% { box-shadow: 0 0 0 0 rgba(255,184,0,0.35); }
-    50% { box-shadow: 0 0 0 10px rgba(255,184,0,0); }
+    50%      { box-shadow: 0 0 0 10px rgba(255,184,0,0); }
   }
-  .logo-ring { animation: logoRing 2.5s ease infinite; border-radius: 9999px; }
+  .logo-ring { animation: logoRing 2.5s var(--ease-in-out) infinite; border-radius: 9999px; }
 
-  /* ── Impact number pulse ───────────────────────── */
-  @keyframes numPop { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
-  .num-pop { animation: numPop 0.4s ease; }
+  /* ── Impact number pop ──────────────────────────────────────────── */
+  @keyframes numPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.1); }  /* overshoot first */
+    100% { transform: scale(1); }
+  }
+  .num-pop { animation: numPop 400ms var(--ease-out); }
+
+  /* ── Apple §14 Reduced Motion ───────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    /* Replace translate/scale with crossfades — keep comprehension aids */
+    .reveal, .reveal-stagger > *, .quote-slide, .mission-card,
+    a[href], button, [role="button"], [tabindex="0"] {
+      transition: opacity 200ms ease !important;
+      transform: none !important;
+      animation: none !important;
+    }
+    .reveal.visible, .reveal-stagger.visible > * { opacity: 1 !important; }
+    .scroll-caret { animation: none !important; }
+    .logo-ring { animation: none !important; }
+  }
 </style>
 </head>
 <body class="text-on-background min-h-screen flex flex-col">
@@ -418,6 +520,23 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ── AccordionGallery: Education Through Indriya ──────────────────── -->
+  <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg reveal" id="gallery">
+    <div class="ag-section__intro">
+      <div class="ag-section__eyebrow">
+        <span class="material-symbols-outlined" style="font-size:14px">photo_library</span>
+        Visual Stories
+      </div>
+      <h2 class="ag-section__title">Education Without Limits</h2>
+      <p class="ag-section__sub">
+        From classrooms in Chennai to schools in Kolkata, every child deserves to learn.
+        Hover over a panel to explore the world Indriya is building.
+      </p>
+    </div>
+    <!-- Gallery container; JS injects panels -->
+    <div id="indriya-gallery" style="border-radius:18px;overflow:hidden;"></div>
   </section>
 
   <!-- Dual Learning Paths -->
@@ -696,6 +815,64 @@
 </script>
 
 <script src="gradient-bg.js"></script>
+<script src="accordion-gallery.js"></script>
+<script>
+  // ── AccordionGallery: India Deaf + Blind Education ──────────────────────
+  (function () {
+    var el = document.getElementById('indriya-gallery');
+    if (!el || typeof AccordionGallery === 'undefined') return;
+
+    // Curated Unsplash images: education, sign language, India classrooms
+    var items = [
+      {
+        image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&h=1200&fit=crop&auto=format',
+        label: 'Learning Together',
+        link: '#'
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=900&h=1200&fit=crop&auto=format',
+        label: 'Silent Voices',
+        link: '#'
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=900&h=1200&fit=crop&auto=format',
+        label: 'Every Classroom',
+        link: '#'
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=900&h=1200&fit=crop&auto=format',
+        label: 'Braille Dreams',
+        link: '#'
+      },
+      {
+        image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=900&h=1200&fit=crop&auto=format',
+        label: 'No Barriers',
+        link: '#'
+      }
+    ];
+
+    new AccordionGallery(el, {
+      items: items,
+      defaultIndex: 2,
+      height: 480,
+      expandRatio: 0.52,
+      trigger: 'hover',
+      accentColor: '#ffb800',
+      overlayColor: '#0a0500',
+      textColor: '#ffffff',
+      grayscale: true,
+      showLabels: true,
+      duration: 0.65,
+      ease: 'power3.out',
+      parallax: 0.5,
+      tilt: 7,
+      stagger: 0.06,
+      gap: 8,
+      radius: 18,
+      orientation: 'horizontal'
+    });
+  })();
+</script>
 <!-- ── Scroll-Reveal IntersectionObserver ────────────── -->
 <script>
   (function() {
