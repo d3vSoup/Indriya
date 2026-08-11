@@ -1,0 +1,202 @@
+/* ── AccordionGallery — CSS Grid edition ────────────────────────────
+   Animates grid-template-columns — single layout property, browser-
+   optimised path. No flex-grow, no JS animation loop, no GSAP.
+   ──────────────────────────────────────────────────────────────── */
+
+.accordion-gallery {
+  --ag-accent: #ffb800;
+  --ag-text: #ffffff;
+  --ag-gap: 8px;
+  --ag-radius: 18px;
+  --ag-dur: 0.55s;
+  --ag-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  display: grid;
+  /* JS sets grid-template-columns */
+  grid-auto-rows: 1fr;
+  gap: var(--ag-gap);
+  width: 100%;
+  height: 480px;
+
+  /* ★ Single property — browser can optimise this far better than N flex tweens */
+  transition: grid-template-columns var(--ag-dur) var(--ag-ease);
+
+  /* Limit layout recalc scope to this element only */
+  contain: layout style;
+}
+
+/* ── Panel ── */
+.ag-panel {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--ag-radius);
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  outline: none;
+  background: #111;
+
+  /* GPU layer — transforms will be composited */
+  transform: translateZ(0);
+
+  /* Tilt: only transform changes, no layout impact */
+  transition: transform var(--ag-dur) var(--ag-ease), box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.ag-panel:focus-visible {
+  box-shadow: 0 0 0 3px var(--ag-accent);
+}
+
+/* ── Frame / Media ── */
+.ag-panel__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.ag-panel__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* No filter, no transform tweens — just let images fill the panel */
+  transition: opacity var(--ag-dur) ease;
+  will-change: opacity;
+}
+
+.ag-panel__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* Promote img to own layer to avoid repaint on opacity change */
+  transform: translateZ(0);
+}
+
+/* ── Dim overlay ── */
+.ag-panel__dim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(10, 5, 0, 0.52);
+  transition: opacity var(--ag-dur) ease;
+  will-change: opacity;
+}
+.ag-panel--active .ag-panel__dim { opacity: 0; }
+
+/* ── Gradient overlay (always present) ── */
+.ag-panel__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 45%, rgba(10,5,0,0.85) 100%);
+}
+
+/* ── Label ── */
+.ag-panel__label {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ag-panel__bar {
+  flex: 0 0 3px;
+  width: 3px;
+  height: 24px;
+  border-radius: 3px;
+  background: var(--ag-accent);
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.3s ease 0.05s, transform 0.3s var(--ag-ease) 0.05s;
+  will-change: opacity, transform;
+}
+
+.ag-panel__text {
+  color: var(--ag-text);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1.2vw, 1.25rem);
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.3s ease 0.12s, transform 0.3s var(--ag-ease) 0.12s;
+  will-change: opacity, transform;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.7);
+}
+
+/* ★ CSS-only label reveal — zero JS needed */
+.ag-panel--active .ag-panel__bar,
+.ag-panel--active .ag-panel__text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Section wrapper ── */
+.ag-section__intro { text-align: center; margin-bottom: 1.5rem; }
+
+.ag-section__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7c5800;
+  margin-bottom: 10px;
+}
+
+.ag-section__title {
+  font-family: 'Quintessential', cursive;
+  font-size: clamp(24px, 4vw, 36px);
+  color: #1c1c18;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.ag-section__sub {
+  font-size: 15px;
+  color: #514532;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ── Mobile ── */
+@media (max-width: 560px) {
+  .accordion-gallery {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: unset;
+    height: auto !important;
+    contain: none;
+  }
+  .ag-panel { min-height: 80px; transform: none !important; }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .accordion-gallery,
+  .ag-panel,
+  .ag-panel__media,
+  .ag-panel__bar,
+  .ag-panel__text,
+  .ag-panel__dim {
+    transition-duration: 0s !important;
+    will-change: auto !important;
+  }
+}
