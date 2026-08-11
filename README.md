@@ -9,7 +9,7 @@
   
   <br>
 
-  [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://bharat-shakti-one.vercel.app/)
+  [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://indriya.vercel.app/)
   [![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://bharat-shakti-backend.onrender.com/)
   [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
   [![Supabase](https://img.shields.io/badge/CDN-Supabase-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)

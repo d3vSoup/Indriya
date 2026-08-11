@@ -11,7 +11,7 @@ The platform is deployed globally with a decoupled, high-performance architectur
 
 | Tier | Host | Live URL | Function |
 |---|---|---|---|
-| **Frontend** | **Vercel** | `https://bharat-shakti-one.vercel.app` | Static HTML5/JS Web App (`index.html`, `deaf.html`, `blind.html`) |
+| **Frontend** | **Vercel** | `https://indriya.vercel.app` | Static HTML5/JS Web App (`index.html`, `deaf.html`, `blind.html`) |
 | **Backend API** | **Render** | `https://bharat-shakti-backend.onrender.com` | Python FastAPI server handling WebSockets & Google Translate API |
 | **Asset CDN** | **Supabase** | `https://cnwsrgqlpvxxnwsndhsm.supabase.co` | 269 cloud-hosted ISL gesture images & animated GIFs |
 
