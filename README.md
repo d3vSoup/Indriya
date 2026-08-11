@@ -141,15 +141,6 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
-## <img src="https://raw.githubusercontent.com/microsoft/fluentui-system-icons/master/assets/Document/SVG/ic_fluent_document_24_regular.svg" width="24" height="24" align="center"> Project Documentation
-
-We maintain detailed, living documents about our design philosophy, technical choices, and future roadmaps. Check them out to see our thought process:
-- <img src="https://raw.githubusercontent.com/microsoft/fluentui-system-icons/master/assets/Document/SVG/ic_fluent_document_16_regular.svg" width="16" height="16" align="center"> [Context & Architecture (context.md)](context.md)
-- <img src="https://raw.githubusercontent.com/microsoft/fluentui-system-icons/master/assets/Document/SVG/ic_fluent_document_16_regular.svg" width="16" height="16" align="center"> [Deaf Mode Strategy (deaf.md)](deaf.md)
-- <img src="https://raw.githubusercontent.com/microsoft/fluentui-system-icons/master/assets/Document/SVG/ic_fluent_document_16_regular.svg" width="16" height="16" align="center"> [Blind Mode Strategy (blind.md)](blind.md)
-- <img src="https://raw.githubusercontent.com/microsoft/fluentui-system-icons/master/assets/Document/SVG/ic_fluent_document_16_regular.svg" width="16" height="16" align="center"> [AI Integration Strategy (ai.md)](ai.md)
-- <img src="https://raw.githubusercontent.com/microsoft/fluentui-system-icons/master/assets/Document/SVG/ic_fluent_document_16_regular.svg" width="16" height="16" align="center"> [Master Document (bharat_shakti_master_document.md)](bharat_shakti_master_document.md)
-
 <br>
 
 <div align="center">
