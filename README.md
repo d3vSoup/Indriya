@@ -35,9 +35,6 @@ In a typical Indian classroom, educational infrastructure struggles to support s
 
 Indriya bridges these gaps through two powerful, browser-based environments that require **zero specialized hardware**.
 
-<p align="center">
-  <img src="docs/assets/lower.png" alt="Visual Stories Screenshot" width="900" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.15);"/>
-</p>
 
 ---
 
