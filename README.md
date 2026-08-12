@@ -74,7 +74,7 @@ A **native digital Braille environment** that allows blind students to take note
 
 Indriya leverages AI as an **invisible infrastructure** to make the experience seamless.
 Highlights include:
-- **Board OCR:** Point a phone camera at a blackboard, and Gemini Vision extracts handwriting to broadcast to both Deaf and Blind modes.
+- **Board OCR:** Point a phone camera at a blackboard, and **Groq Llama 4 Vision** extracts handwriting (Hindi & English) to broadcast to both Deaf and Blind modes. Gemini 2.0 Flash serves as a fallback.
 - **Two-Way Signing:** Uses **MediaPipe + XGBoost** to let deaf students sign back via webcam.
 - **Sentence Simplification:** LLMs re-write complex academic jargon into simpler terms for higher ISL dictionary coverage.
 
@@ -101,7 +101,8 @@ Highlights include:
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Gemini_Vision-AI%20%7C%20OCR-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini Vision" />
+  <img src="https://img.shields.io/badge/Groq-LPU%20Inference-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq" />
+  <img src="https://img.shields.io/badge/Gemini_2.0_Flash-Fallback%20OCR-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini Fallback" />
   <img src="https://img.shields.io/badge/MediaPipe-Hand_Tracking-00897B?style=for-the-badge&logo=google&logoColor=white" alt="MediaPipe" />
   <img src="https://img.shields.io/badge/XGBoost-Sign_Classifier-FF6600?style=for-the-badge&logo=xgboost&logoColor=white" alt="XGBoost" />
   <img src="https://img.shields.io/badge/Web_Speech_API-STT%20%7C%20TTS-8B5CF6?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Web Speech API" />
@@ -110,7 +111,7 @@ Highlights include:
 - **Frontend:** Vanilla HTML/JS, TailwindCSS, Web Speech API, `SpeechSynthesis` API.
 - **Backend:** Python, FastAPI, WebSockets, Uvicorn.
 - **ML Pipeline:** MediaPipe (hand landmark extraction) → OpenCV (frame processing) → XGBoost (ISL sign classifier).
-- **AI / LLM:** Gemini Vision (Board OCR & sentence simplification).
+- **AI / LLM:** Groq LPU — Llama 4 Vision (Board OCR), Llama 3.3 (ISL sentence simplification), Mixtral (lesson summarisation). Gemini 2.0 Flash as OCR fallback.
 - **Automation:** n8n (workflow orchestration for data pipelines).
 - **Assets/CDN:** Supabase Storage (hosting 250+ ISL animation GIFs + Indriya logo).
 - **Deployments:** Vercel (Frontend), Render (Backend).
